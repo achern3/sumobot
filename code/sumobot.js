@@ -13,6 +13,12 @@ board.on('ready', function() {
     configs.M3
   ]);
 
+  var servo = new five.Servo({
+    pin: 10,
+    center: true
+    //range: [45, 135]
+  });
+
   this.repl.inject({
     motors: motors
   });
@@ -23,6 +29,7 @@ board.on('ready', function() {
   function forward() {
     console.log('Going forward');
     motors.fwd(255);
+    servo.sweep();
   }
 
   function backward() {
