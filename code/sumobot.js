@@ -13,14 +13,22 @@ board.on('ready', function() {
     configs.M3
   ]);
 
+  var sstart = 162;
+  var fine = 15;
+  var trim = 2;
+
   var servo = new five.Servo({
     pin: 10,
-    center: true
+    startAt: sstart
     //range: [45, 135]
   });
 
   this.repl.inject({
     motors: motors
+  });
+
+  this.repl.inject({
+    servo: servo
   });
 
   console.log('Welcome to the Pee Wee Runt Rover!');
@@ -29,7 +37,6 @@ board.on('ready', function() {
   function forward() {
     console.log('Going forward');
     motors.fwd(255);
-    servo.sweep();
   }
 
   function backward() {
@@ -87,6 +94,28 @@ board.on('ready', function() {
 
       stop();
 
+    } else if ( key.name === 'a' ) {
+      servo.to(60);
+    } else if ( key.name === 'z' ) {
+      servo.to(sstart);
+
+    // u and d used for fine control
+    } else if ( key.name === 's' ) {
+      if (servo.value < 60 + fine) {return;}
+      servo.to(servo.value - fine);
+    } else if ( key.name === 'x' ) {
+      servo.to(servo.value + fine);
+    }
+    //d and c to control trim location of bottom
+    else if ( key.name === 'd' ) {
+      if (sstart < 60 + trim) {return;}
+      sstart -= trim;
+      console.log(sstart);
+      servo.to(' ' + sstart);
+    } else if ( key.name === 'c' ) {
+      sstart += trim;
+      console.log(' ' + sstart);
+      servo.to(sstart);
     }
   });
 });
